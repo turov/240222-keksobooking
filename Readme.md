@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Илья Туров](https://up.htmlacademy.ru/javascript/11/user/240222).
-* Наставник: [Сергей Буртылёв] (https://htmlacademy.ru/profile/id3341).
+* Наставник: [Сергей Буртылёв](https://htmlacademy.ru/profile/id3341).
 
 ---
 
