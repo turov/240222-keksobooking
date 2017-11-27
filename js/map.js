@@ -28,7 +28,8 @@ function generateAds() {
       'author': {
         'avatar': profilePhotos[i]
       },
-      'offer': {'title': homeTypeNames[i],
+      'offer': {
+        'title': homeTypeNames[i],
         'address': x + ', ' + y,
         'price': getRandomInteger(1000, 1000000),
         'type': types[getRandomInteger(0, types.length - 1)],
@@ -52,12 +53,16 @@ function getRandomInteger(min, max) {
   var rand = min + Math.random() * (max + 1 - min);
   rand = Math.floor(rand);
   return rand;
-} /* Нахождение случайного числа в диапозоне от min до max  */
+}
+
+/* Нахождение случайного числа в диапозоне от min до max  */
 
 
 function compareRandom() {
   return Math.random() - 0.5;
-} /* Случайный порядок в массиве */
+}
+
+/* Случайный порядок в массиве */
 
 function getRandomArray(array) {
   var copiedArray = array.slice();
@@ -74,34 +79,32 @@ function generatePhotos(numberOfPhotos) {
   return photos;
 }
 
-var rentData = generateAds();
-
 var pageMap = document.querySelector('.map');
 pageMap.classList.remove('map--faded');
-var template = document.querySelector('template');
-var mapCard = template.content.querySelector('.map__card');
-var mapPins = document.querySelector('.map__pins');
-var mapPin = document.querySelector('.map__pin');
 
-var createPin = function (pin) {
+var rentData = generateAds();
+
+var createPin = function (info) {
+  var mapPin = document.querySelector('.map__pin');
   var mapElement = mapPin.cloneNode(true);
-  mapElement.setAttribute('style', 'left: ' + pin.location.x + 'px; ' + 'top: ' + pin.location.y + 'px; ');
-  mapElement.children[0].setAttribute('src', pin.author.avatar);
+  mapElement.style.top = info.location.y + 'px';
+  mapElement.style.left = info.location.x + 'px';
+  mapElement.querySelector('img').src = info.author.avatar;
   return mapElement;
 };
 
 var fillMap = function () {
-  mapPin.setAttribute('style', 'left:' + rentData[0].location.x + 'px; top:' + rentData[0].location.y + 'px');
-  mapPin.children[0].setAttribute('src', rentData[0].author.avatar);
-
+  var mapPins = document.querySelector('.map__pins');
   var fragment = document.createDocumentFragment();
-  for (var i = 1; i < rentData.length; i++) {
+  for (var i = 0; i < rentData.length; i++) {
     fragment.appendChild(createPin(rentData[i]));
   }
   mapPins.appendChild(fragment);
 };
 
-function createPopup() {
+function createPopup(adsinfo) {
+  var template = document.querySelector('template');
+  var mapCard = template.content.querySelector('.map__card');
   var element = mapCard.cloneNode(true);
   element.querySelector('.popup__features').textContent = '';
   var getFeaturesList = function (features) {
@@ -114,18 +117,18 @@ function createPopup() {
     }
     featuresList.appendChild(featureItem);
   };
-  element.querySelector('h3').textContent = rentData[0].offer.title;
-  element.querySelector('p small').textContent = rentData[0].offer.address;
-  element.querySelector('.popup__price').textContent = rentData[0].offer.price + '₽/ночь';
-  element.querySelector('h4').textContent = rentData[0].offer.type;
-  element.querySelectorAll('p')[2].textContent = rentData[0].offer.rooms + ' комнаты для ' + rentData[0].offer.guests + ' гостей';
-  element.querySelectorAll('p')[3].textContent = 'Заезд после ' + rentData[0].offer.checkin + ', выезд до ' + rentData[0].offer.checkout;
+  element.querySelector('h3').textContent = adsinfo.offer.title;
+  element.querySelector('p small').textContent = adsinfo.offer.address;
+  element.querySelector('.popup__price').textContent = adsinfo.offer.price + '₽/ночь';
+  element.querySelector('h4').textContent = adsinfo.offer.type;
+  element.querySelectorAll('p')[2].textContent = adsinfo.offer.rooms + ' комнаты для ' + adsinfo.offer.guests + ' гостей';
+  element.querySelectorAll('p')[3].textContent = 'Заезд после ' + adsinfo.offer.checkin + ', выезд до ' + adsinfo.offer.checkout;
   element.querySelector('.popup__features').textContent = '';
-  getFeaturesList(rentData[0].offer.features);
-  element.querySelector('img').setAttribute('src', rentData[0].author.avatar);
+  getFeaturesList(adsinfo.offer.features);
+  element.querySelector('img').setAttribute('src', adsinfo.author.avatar);
   pageMap.appendChild(element);
 }
 
-createPopup(rentData);
+createPopup(rentData[0]);
 fillMap();
 
