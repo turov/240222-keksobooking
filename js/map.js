@@ -80,12 +80,12 @@ function generatePhotos(numberOfPhotos) {
 }
 
 var pageMap = document.querySelector('.map');
-pageMap.classList.remove('map--faded');
 
 var rentData = generateAds();
 
 var createPin = function (info) {
-  var mapPin = document.querySelector('.map__pin');
+  var template = document.querySelector('template');
+  var mapPin = template.content.querySelector('.map__pin');
   var mapElement = mapPin.cloneNode(true);
   mapElement.style.top = info.location.y + 'px';
   mapElement.style.left = info.location.x + 'px';
@@ -129,6 +129,39 @@ function createPopup(adsinfo) {
   pageMap.appendChild(element);
 }
 
+
 createPopup(rentData[0]);
 fillMap();
 
+//module-4
+var pins = document.querySelectorAll('.map__pin');
+for (var i = 1; i < pins.length; i++) {
+  pins[i].classList.add('hidden');
+}
+
+var Popup = document.querySelector('.map__card');
+Popup.classList.add('hidden');
+
+var form = document.querySelector('.notice__form');
+var fields = form.querySelectorAll('fieldset');
+for (var i = 0; i < fields.length; i++) {
+  fields[i].disabled = true;
+}
+
+var onMainPinMouseup = function () {
+  pageMap.classList.remove('map--faded');
+  form.classList.remove('notice__form--disabled');
+  for (var t = 0; t < fields.length; t++) {
+    fields[t].disabled = false;
+  }
+  for (var j = 1; j < pins.length; j++) {
+    pins[j].classList.remove('hidden');
+  }
+};
+var onPinClick = function () {
+
+};
+
+
+var mapPinMain = pageMap.querySelector('.map__pin--main');
+mapPinMain.addEventListener('mouseup', onMainPinMouseup);
