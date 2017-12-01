@@ -1,6 +1,6 @@
 'use strict';
 
-function generateAds() {
+var generateAds = function () {
   var ads = [];
   var homeTypeNames = [
     'Большая уютная квартира',
@@ -25,6 +25,7 @@ function generateAds() {
     x = getRandomInteger(300, 900);
     y = getRandomInteger(100, 500);
     ads[i] = {
+      'id': i,
       'author': {
         'avatar': profilePhotos[i]
       },
@@ -47,39 +48,38 @@ function generateAds() {
   }
 
   return ads;
-}
+};
 
-function getRandomInteger(min, max) {
+var getRandomInteger = function (min, max) {
   var rand = min + Math.random() * (max + 1 - min);
   rand = Math.floor(rand);
   return rand;
-}
+};
 
 /* Нахождение случайного числа в диапозоне от min до max  */
 
 
-function compareRandom() {
+var compareRandom = function () {
   return Math.random() - 0.5;
-}
+};
 
 /* Случайный порядок в массиве */
 
-function getRandomArray(array) {
+var getRandomArray = function (array) {
   var copiedArray = array.slice();
   var lengthOfArray = getRandomInteger(1, array.length);
   copiedArray.sort(compareRandom);
   return copiedArray.splice(0, lengthOfArray);
-}
+};
 
-function generatePhotos(numberOfPhotos) {
+var generatePhotos = function (numberOfPhotos) {
   var photos = [];
   for (var i = 1; i <= numberOfPhotos; i++) {
     photos[i] = 'img/avatars/user0' + i + '.png';
   }
   return photos;
-}
+};
 
-var pageMap = document.querySelector('.map');
 
 var rentData = generateAds();
 
@@ -90,6 +90,7 @@ var createPin = function (info) {
   mapElement.style.top = info.location.y + 'px';
   mapElement.style.left = info.location.x + 'px';
   mapElement.querySelector('img').src = info.author.avatar;
+  mapElement.setAttribute('data-id', info.id);
   return mapElement;
 };
 
@@ -102,7 +103,8 @@ var fillMap = function () {
   mapPins.appendChild(fragment);
 };
 
-function createPopup(adsinfo) {
+
+var createPopup = function (adsinfo) {
   var template = document.querySelector('template');
   var mapCard = template.content.querySelector('.map__card');
   var element = mapCard.cloneNode(true);
@@ -126,27 +128,36 @@ function createPopup(adsinfo) {
   element.querySelector('.popup__features').textContent = '';
   getFeaturesList(adsinfo.offer.features);
   element.querySelector('img').setAttribute('src', adsinfo.author.avatar);
-  pageMap.appendChild(element);
-}
+  return element;
+};
 
+// module-4
 
-createPopup(rentData[0]);
-fillMap();
+// var Popup = document.querySelector('.map__card');
+// Popup.classList.add('hidden');
 
-//module-4
-var pins = document.querySelectorAll('.map__pin');
-for (var i = 1; i < pins.length; i++) {
-  pins[i].classList.add('hidden');
-}
-
-var Popup = document.querySelector('.map__card');
-Popup.classList.add('hidden');
-
+var escKey = 27;
+var enterKey = 13;
+var pageMap = document.querySelector('.map');
 var form = document.querySelector('.notice__form');
 var fields = form.querySelectorAll('fieldset');
-for (var i = 0; i < fields.length; i++) {
-  fields[i].disabled = true;
-}
+var mapPinMain = pageMap.querySelector('.map__pin--main');
+var previousPopup = null;
+// var previousPin = null;
+
+var showPopup = function (popup) {
+  if (previousPopup) {
+    pageMap.removeChild(previousPopup);
+  }
+  previousPopup = popup;
+  pageMap.appendChild(popup);
+};
+
+var disableFields = function () {
+  for (var i = 0; i < fields.length; i++) {
+    fields[i].disabled = true;
+  }
+};
 
 var onMainPinMouseup = function () {
   pageMap.classList.remove('map--faded');
@@ -154,14 +165,70 @@ var onMainPinMouseup = function () {
   for (var t = 0; t < fields.length; t++) {
     fields[t].disabled = false;
   }
-  for (var j = 1; j < pins.length; j++) {
-    pins[j].classList.remove('hidden');
+
+  fillMap();
+
+  var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+
+  for (var j = 0; j < pins.length; j++) {
+    pins[j].addEventListener('click', onPinClick);
   }
-};
-var onPinClick = function () {
-
+  mapPinMain.removeEventListener('mouseup', onMainPinMouseup);
 };
 
+var onMainPinEnt = function () {
+  pageMap.classList.remove('map--faded');
+  form.classList.remove('notice__form--disabled');
+  for (var t = 0; t < fields.length; t++) {
+    fields[t].disabled = false;
+  }
 
-var mapPinMain = pageMap.querySelector('.map__pin--main');
+  fillMap();
+
+  var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+
+  for (var j = 0; j < pins.length; j++) {
+    pins[j].addEventListener('click', onPinClick);
+  }
+  mapPinMain.removeEventListener('mouseup', onMainPinMouseup);
+};
+
+var onPinClick = function (event) {
+  var currentPin = event.currentTarget;
+  var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+  for (var t = 0; t < pins.length; t++) {
+    pins[t].classList.remove('map__pin--active');
+  }
+  currentPin.classList.add('map__pin--active');
+  var id = currentPin.dataset.id;
+  var currentPopup = createPopup(rentData[id]);
+  showPopup(currentPopup);
+
+  var onPopupEsc = function (evt) {
+    if (evt.keyCode === escKey) {
+      currentPopup.classList.add('hidden');
+      currentPin.classList.remove('map__pin--active');
+    }
+    document.removeEventListener('keydown', onPopupEsc);
+  };
+
+  var onCrossEnt = function (evt) {
+    if (evt.keyCode === enterKey) {
+      currentPopup.classList.add('hidden');
+      currentPin.classList.remove('map__pin--active');
+    }
+  };
+
+  var popupClose = currentPopup.querySelector('.popup__close');
+  popupClose.addEventListener('click', function () {
+    currentPopup.classList.add('hidden');
+    currentPin.classList.remove('map__pin--active');
+  });
+  popupClose.addEventListener('keydonw', onCrossEnt);
+  document.addEventListener('keydown', onPopupEsc);
+};
+
 mapPinMain.addEventListener('mouseup', onMainPinMouseup);
+mapPinMain.addEventListener('keydown', onMainPinEnt);
+
+disableFields();
