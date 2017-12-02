@@ -133,17 +133,13 @@ var createPopup = function (adsinfo) {
 
 // module-4
 
-// var Popup = document.querySelector('.map__card');
-// Popup.classList.add('hidden');
-
 var escKey = 27;
-var enterKey = 13;
 var pageMap = document.querySelector('.map');
 var form = document.querySelector('.notice__form');
 var fields = form.querySelectorAll('fieldset');
 var mapPinMain = pageMap.querySelector('.map__pin--main');
 var previousPopup = null;
-// var previousPin = null;
+var previousPin = null;
 
 var showPopup = function (popup) {
   if (previousPopup) {
@@ -176,59 +172,34 @@ var onMainPinMouseup = function () {
   mapPinMain.removeEventListener('mouseup', onMainPinMouseup);
 };
 
-var onMainPinEnt = function () {
-  pageMap.classList.remove('map--faded');
-  form.classList.remove('notice__form--disabled');
-  for (var t = 0; t < fields.length; t++) {
-    fields[t].disabled = false;
+var onCloseEsc = function (evt) { // Функция навешивается на document и закрывает попап при нажатии на escape
+  if (evt.keyCode === escKey) {
+    previousPopup.classList.add('hidden');
+    previousPin.classList.remove('map__pin--active');
   }
-
-  fillMap();
-
-  var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
-
-  for (var j = 0; j < pins.length; j++) {
-    pins[j].addEventListener('click', onPinClick);
-  }
-  mapPinMain.removeEventListener('mouseup', onMainPinMouseup);
+  document.removeEventListener('keydown', onCloseEsc);
 };
 
-var onPinClick = function (event) {
-  var currentPin = event.currentTarget;
-  var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
-  for (var t = 0; t < pins.length; t++) {
-    pins[t].classList.remove('map__pin--active');
+var onCloseClick = function (evt) { // функция, срабатывающая при нажатии на кнопку закрытия (клик или клавиша Enter)
+  previousPopup.classList.add('hidden');
+  previousPin.classList.remove('map__pin--active');
+  evt.currentTarget.removeEventListener('click', onCloseClick)
+};
+
+var onPinClick = function (event) { // кнопка открытия попапа
+  var currentPin = event.currentTarget; // пин, по которому кликнули
+  currentPin.classList.add('map__pin--active'); // вешаем на него класс active
+  if (previousPin) {
+    previousPin.classList.remove('map__pin--active'); // если до этого нажимали на пин, то удаляем из него класс active
   }
-  currentPin.classList.add('map__pin--active');
-  var id = currentPin.dataset.id;
+  previousPin = currentPin; // записываем наш текущий пин в предыдущий.
+  var id = currentPin.dataset.id;   // заполняем и выводим попап.
   var currentPopup = createPopup(rentData[id]);
   showPopup(currentPopup);
-
-  var onPopupEsc = function (evt) {
-    if (evt.keyCode === escKey) {
-      currentPopup.classList.add('hidden');
-      currentPin.classList.remove('map__pin--active');
-    }
-    document.removeEventListener('keydown', onPopupEsc);
-  };
-
-  var onCrossEnt = function (evt) {
-    if (evt.keyCode === enterKey) {
-      currentPopup.classList.add('hidden');
-      currentPin.classList.remove('map__pin--active');
-    }
-  };
-
-  var popupClose = currentPopup.querySelector('.popup__close');
-  popupClose.addEventListener('click', function () {
-    currentPopup.classList.add('hidden');
-    currentPin.classList.remove('map__pin--active');
-  });
-  popupClose.addEventListener('keydonw', onCrossEnt);
-  document.addEventListener('keydown', onPopupEsc);
+  var popupClose = currentPopup.querySelector('.popup__close');   //находим кнопку закрытия
+  popupClose.addEventListener('click', onCloseClick);
+  document.addEventListener('keydown', onCloseEsc);
 };
 
 mapPinMain.addEventListener('mouseup', onMainPinMouseup);
-mapPinMain.addEventListener('keydown', onMainPinEnt);
-
 disableFields();
