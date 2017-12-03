@@ -183,7 +183,7 @@ var onCloseEsc = function (evt) { // Функция навешивается н�
 var onCloseClick = function (evt) { // функция, срабатывающая при нажатии на кнопку закрытия (клик или клавиша Enter)
   previousPopup.classList.add('hidden');
   previousPin.classList.remove('map__pin--active');
-  evt.currentTarget.removeEventListener('click', onCloseClick)
+  evt.currentTarget.removeEventListener('click', onCloseClick);
 };
 
 var onPinClick = function (event) { // кнопка открытия попапа
@@ -193,13 +193,124 @@ var onPinClick = function (event) { // кнопка открытия попап�
     previousPin.classList.remove('map__pin--active'); // если до этого нажимали на пин, то удаляем из него класс active
   }
   previousPin = currentPin; // записываем наш текущий пин в предыдущий.
-  var id = currentPin.dataset.id;   // заполняем и выводим попап.
+  var id = currentPin.dataset.id; // заполняем и выводим попап.
   var currentPopup = createPopup(rentData[id]);
   showPopup(currentPopup);
-  var popupClose = currentPopup.querySelector('.popup__close');   //находим кнопку закрытия
+  var popupClose = currentPopup.querySelector('.popup__close');// находим кнопку закрытия
   popupClose.addEventListener('click', onCloseClick);
   document.addEventListener('keydown', onCloseEsc);
 };
 
 mapPinMain.addEventListener('mouseup', onMainPinMouseup);
 disableFields();
+
+// валидация формы
+
+var address = document.querySelector('#address');
+var title = document.querySelector('#title');
+var price = document.querySelector('#price');
+var type = document.querySelector('#type');
+var timein = document.querySelector('#timein');
+var timeout = document.querySelector('#timeout');
+var rooms = document.querySelector('#room_number');
+var capacity = document.querySelector('#capacity');
+form.setAttribute('action', 'https://js.dump.academy/keksobooking');
+form.setAttribute('type', 'multipart/form-data');
+address.required = true;
+address.value = 'meh';
+address.setAttribute('readonly', 'readonly');
+title.required = true;
+title.setAttribute('minlength', '30');
+title.setAttribute('maxlength', '100');
+price.required = true;
+price.min = 0;
+price.max = 1000000;
+price.value = 1000;
+
+var syncroniseInputs = function (select1, select2) {
+  var select = select1.value;
+  select2.value = select;
+  return select2;
+};
+
+var syncronisePrice = function (param1, param2) {
+  switch (param1.value) {
+    case 'bungalo':
+      param2.min = 0;
+      break;
+    case 'flat':
+      param2.min = 1000;
+      break;
+    case 'house':
+      param2.min = 5000;
+      break;
+    case 'palace':
+      param2.min = 10000;
+      break;
+  }
+  return param2;
+};
+
+var syncroniseRooms = function (rooms1, capacity1) {
+  for (var i = 0; i < capacity1.options.length; i++) {
+    capacity1.options[i].disabled = true;
+  }
+  switch (rooms1.value) {
+    case '1':
+      capacity1.options[2].disabled = false;
+      capacity1.value = 1;
+      break;
+    case '2':
+      capacity1.options[1].disabled = false;
+      capacity1.options[2].disabled = false;
+      break;
+    case '3':
+      capacity1.options[0].disabled = false;
+      capacity1.options[1].disabled = false;
+      capacity1.options[2].disabled = false;
+      capacity1.value = 3;
+      break;
+    case '100':
+      capacity1.options[3].disabled = false;
+      capacity1.value = 0;
+      break;
+  }
+  return capacity1.options;
+};
+
+timein.addEventListener('change', function () {
+  syncroniseInputs(timein, timeout);
+});
+
+timeout.addEventListener('change', function () {
+  syncroniseInputs(timeout, timein);
+});
+
+type.addEventListener('change', function () {
+  syncronisePrice(type, price);
+});
+
+rooms.addEventListener('change', function () {
+  syncroniseRooms(rooms, capacity);
+});
+
+title.addEventListener('invalid', function () {
+  if (title.validity.tooShort) {
+    title.setCustomValidity('Заголовок объявления должен состоять минимум из 30 символов');
+  } else if (title.validity.tooLong) {
+    title.setCustomValidity('Заголовок объявления не должен превышать 100 символов');
+  } else if (title.validity.valueMissing) {
+    title.setCustomValidity('Обязательное поле');
+  } else {
+    title.setCustomValidity('');
+  }
+});
+
+title.addEventListener('input', function (evt) {
+  var target = evt.target;
+  if (target.value.length < 2) {
+    target.setCustomValidity('Заголовок объявления должен состоять минимум из 30 символов');
+  } else {
+    target.setCustomValidity('');
+  }
+});
