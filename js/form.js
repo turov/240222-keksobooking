@@ -3,7 +3,6 @@
 (function () {
 // валидация формы
   var form = document.querySelector('.notice__form');
-  var fields = form.querySelectorAll('fieldset');
   var inputAddress = document.querySelector('#address');
   var inputTitle = document.querySelector('#title');
   var inputPrice = document.querySelector('#price');
@@ -24,13 +23,6 @@
   inputPrice.min = 0;
   inputPrice.max = 1000000;
   inputPrice.value = 1000;
-  var disableFields = function () {
-    for (var i = 0; i < fields.length; i++) {
-      fields[i].disabled = true;
-    }
-  };
-  disableFields();
-
   var syncroniseInputs = function (select1, select2) {
     var select = select1.value;
     select2.value = select;
