@@ -1,8 +1,9 @@
 'use strict';
 
 (function () {
-
-  var createPopup = function (adsinfo) {
+  var previousPopup = null;
+  var closeBtn = null;
+  var create = function (adsinfo) {
     var template = document.querySelector('template');
     var mapCard = template.content.querySelector('.map__card');
     var element = mapCard.cloneNode(true);
@@ -29,8 +30,22 @@
     return element;
   };
 
+  var show = function (popup, container) {
+    if (previousPopup) {
+      container.removeChild(previousPopup);
+    }
+    previousPopup = popup;
+    container.appendChild(popup);
+  };
+
+  var hide = function () {
+    previousPopup.classList.add('hidden');
+  };
   window.card = {
-    createPopup: createPopup
+    create: create,
+    show: show,
+    hide: hide,
+    closeBtn: closeBtn
   }
   ;
 })();
