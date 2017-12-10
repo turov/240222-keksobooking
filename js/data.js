@@ -1,6 +1,14 @@
 'use strict';
 
 (function () {
+  /* Генерация фотографий */
+  var generatePhotos = function (numberOfPhotos) {
+    var photos = [];
+    for (var i = 1; i <= numberOfPhotos; i++) {
+      photos[i] = 'img/avatars/user0' + i + '.png';
+    }
+    return photos;
+  };
   /* Генерируем массив с объектами */
   var generateAds = function () {
     var ads = [];
@@ -18,7 +26,7 @@
     var types = ['квартира', 'дом', 'бунгало'];
     var checkins = ['12:00', '13:00', '14:00'];
     var checkouts = ['12:00', '13:00', '14:00'];
-    var profilePhotos = window.utils.generatePhotos(8).sort(window.utils.compareRandom);
+    var profilePhotos = generatePhotos(8).sort(window.utils.compareRandom);
 
     var x = null;
     var y = null;

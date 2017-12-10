@@ -1,48 +1,37 @@
 'use strict';
 
 (function () {
-  var escKey = 27;
   var pageMap = document.querySelector('.map');
   var form = document.querySelector('.notice__form');
-  var fields = form.querySelectorAll('fieldset');
   var mapPinMain = pageMap.querySelector('.map__pin--main');
-  var previousPopup = null;
-  var previousPin = null;
+  var PIN_MAIN_SHIFT_Y = 54;
   var rentData = window.generatedAds;
 
   var fillMap = function () {
     var mapPins = document.querySelector('.map__pins');
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < rentData.length; i++) {
-      fragment.appendChild(window.pin.createPin(rentData[i]));
+      fragment.appendChild(window.pin.create(rentData[i]));
     }
     mapPins.appendChild(fragment);
   };
-  var showPopup = function (popup) {
-    if (previousPopup) {
-      pageMap.removeChild(previousPopup);
-    }
-    previousPopup = popup;
-    pageMap.appendChild(popup);
+
+  var closeAd = function () {
+    window.pin.deactivate();
+    window.card.hide();
   };
 
-  var disableFields = function () {
-    for (var i = 0; i < fields.length; i++) {
-      fields[i].disabled = true;
-    }
+  var removeCloseListeners = function () {
+    document.removeEventListener('keydown', onCloseEsc);
+    window.card.closeBtn.removeEventListener('click', onCloseClick);
   };
 
   var onMainPinMouseup = function () {
     pageMap.classList.remove('map--faded');
     form.classList.remove('notice__form--disabled');
-    for (var t = 0; t < fields.length; t++) {
-      fields[t].disabled = false;
-    }
-
+    window.form.enableFields();
     fillMap();
-
     var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
-
     for (var j = 0; j < pins.length; j++) {
       pins[j].addEventListener('click', onPinClick);
     }
@@ -50,35 +39,71 @@
   };
 
   var onCloseEsc = function (evt) { // Функция навешивается на document и закрывает попап при нажатии на escape
-    if (evt.keyCode === escKey) {
-      previousPopup.classList.add('hidden');
-      previousPin.classList.remove('map__pin--active');
+    if (evt.keyCode === window.utils.KEY_ESCAPE) {
+      closeAd();
+      removeCloseListeners();
     }
-    document.removeEventListener('keydown', onCloseEsc);
   };
 
-  var onCloseClick = function (evt) { // функция, срабатывающая при нажатии на кнопку закрытия (клик или клавиша Enter)
-    previousPopup.classList.add('hidden');
-    previousPin.classList.remove('map__pin--active');
-    evt.currentTarget.removeEventListener('click', onCloseClick);
+  var onCloseClick = function () { // функция, срабатывающая при нажатии на кнопку закрытия (клик или клавиша Enter)
+    closeAd();
+    removeCloseListeners();
   };
 
   var onPinClick = function (event) { // кнопка открытия попапа
     var currentPin = event.currentTarget; // пин, по которому кликнули
-    currentPin.classList.add('map__pin--active'); // вешаем на него класс active
-    if (previousPin) {
-      previousPin.classList.remove('map__pin--active'); // если до этого нажимали на пин, то удаляем из него класс active
-    }
-    previousPin = currentPin; // записываем наш текущий пин в предыдущий.
+    window.pin.activate(currentPin);
     var id = currentPin.dataset.id; // заполняем и выводим попап.
-    var currentPopup = window.card.createPopup(rentData[id]);
-    showPopup(currentPopup);
-    var popupClose = currentPopup.querySelector('.popup__close');// находим кнопку закрытия
-    popupClose.addEventListener('click', onCloseClick);
+    var currentPopup = window.card.create(rentData[id]);
+    window.card.show(currentPopup, pageMap);
+    window.card.closeBtn = currentPopup.querySelector('.popup__close');// находим кнопку закрытия
+    window.card.closeBtn.addEventListener('click', onCloseClick);
     document.addEventListener('keydown', onCloseEsc);
   };
 
   mapPinMain.addEventListener('mouseup', onMainPinMouseup);
-  disableFields();
+  var confineAddress = {
+    min: 100,
+    max: 500
+  };
+  mapPinMain.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+
+    var startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+
+      var shift = {
+        x: startCoords.x - moveEvt.clientX,
+        y: startCoords.y - moveEvt.clientY
+      };
+
+      startCoords = {
+        x: moveEvt.clientX,
+        y: moveEvt.clientY
+      };
+
+      mapPinMain.style.left = (mapPinMain.offsetLeft - shift.x) + 'px';
+      if ((mapPinMain.offsetTop - shift.y) >= (confineAddress.min + PIN_MAIN_SHIFT_Y) && (mapPinMain.offsetTop - shift.y) <= (confineAddress.max + PIN_MAIN_SHIFT_Y)) {
+        mapPinMain.style.top = (mapPinMain.offsetTop - shift.y) + 'px';
+      }
+      window.form.inputAddress.value = (mapPinMain.offsetTop - shift.y) + ', ' + (mapPinMain.offsetLeft - shift.x);
+    };
+
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+
+      pageMap.removeEventListener('mousemove', onMouseMove);
+      pageMap.removeEventListener('mouseup', onMouseUp);
+    };
+
+    pageMap.addEventListener('mousemove', onMouseMove);
+    pageMap.addEventListener('mouseup', onMouseUp);
+
+  });
 })();
 
