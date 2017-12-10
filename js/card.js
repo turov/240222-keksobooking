@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  var previousPopup = null;
   var closeBtn = null;
   var create = function (adsinfo) {
     var template = document.querySelector('template');
@@ -30,22 +29,8 @@
     return element;
   };
 
-  var show = function (popup, container) {
-    if (previousPopup) {
-      container.removeChild(previousPopup);
-    }
-    previousPopup = popup;
-    container.appendChild(popup);
-  };
-
-  var hide = function () {
-    previousPopup.classList.add('hidden');
-  };
   window.card = {
     create: create,
-    show: show,
-    hide: hide,
     closeBtn: closeBtn
-  }
-  ;
+  };
 })();
