@@ -12,6 +12,9 @@
   var inputRooms = document.querySelector('#room_number');
   var inputCapacity = document.querySelector('#capacity');
   var fields = form.querySelectorAll('fieldset');
+  var CHECK_TIMES = ['12:00', '13:00', '14:00'];
+  var HOUSE_TYPES = ['bungalo', 'flat', 'house', 'palace'];
+  var MIN_PRICES = [0, 1000, 5000, 10000];
 
   form.setAttribute('action', 'https://js.dump.academy/keksobooking');
   form.setAttribute('type', 'multipart/form-data');
@@ -25,7 +28,6 @@
   inputPrice.min = 0;
   inputPrice.max = 1000000;
   inputPrice.value = 1000;
-
   var disableFields = function () {
     for (var i = 0; i < fields.length; i++) {
       fields[i].disabled = true;
@@ -38,28 +40,12 @@
     }
 
   };
-  var syncroniseInputs = function (select1, select2) {
-    var select = select1.value;
-    select2.value = select;
+  var syncValues = function (element, value) {
+    element.value = value;
   };
-
-  var syncronisePrice = function (param1, param2) {
-    switch (param1.value) {
-      case 'bungalo':
-        param2.min = 0;
-        break;
-      case 'flat':
-        param2.min = 1000;
-        break;
-      case 'house':
-        param2.min = 5000;
-        break;
-      case 'palace':
-        param2.min = 10000;
-        break;
-    }
+  var syncValueWithMin = function (element, value) {
+    element.min = value;
   };
-
   var syncroniseRooms = function (rooms1, capacity1) {
     for (var i = 0; i < capacity1.options.length; i++) {
       capacity1.options[i].disabled = true;
@@ -85,21 +71,21 @@
         break;
     }
   };
-
-  disableFields();
-
   var onTimeinChange = function () {
-    syncroniseInputs(inputTimein, inputTimeout);
+    window.synchronizeFields(inputTimein, inputTimeout, CHECK_TIMES, CHECK_TIMES, syncValues);
   };
+
   var onTimeoutChange = function () {
-    syncroniseInputs(inputTimeout, inputTimein);
+    window.synchronizeFields(inputTimeout, inputTimein, CHECK_TIMES, CHECK_TIMES, syncValues);
   };
+
   var onTypeChange = function () {
-    syncronisePrice(inputType, inputPrice);
+    window.synchronizeFields(inputType, inputPrice, HOUSE_TYPES, MIN_PRICES, syncValueWithMin);
   };
   var onRoomsChange = function () {
     syncroniseRooms(inputRooms, inputCapacity);
   };
+  disableFields();
   var onTitleInvalid = function () {
     inputTitle.style.border = '1px solid tomato';
     if (inputTitle.validity.tooShort) {
@@ -137,7 +123,6 @@
   inputTimeout.addEventListener('change', onTimeoutChange);
   inputType.addEventListener('change', onTypeChange);
   syncroniseRooms(inputRooms, inputCapacity);
-
   inputRooms.addEventListener('change', function () {
     syncroniseRooms(inputRooms, inputCapacity);
   });
