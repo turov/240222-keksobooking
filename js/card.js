@@ -29,7 +29,6 @@
     element.querySelector('img').setAttribute('src', adsinfo.author.avatar);
     return element;
   };
-
   var show = function (popup, container) {
     if (previousPopup) {
       container.removeChild(previousPopup);
@@ -41,11 +40,11 @@
   var hide = function () {
     previousPopup.classList.add('hidden');
   };
+
   window.card = {
     create: create,
+    closeBtn: closeBtn,
     show: show,
-    hide: hide,
-    closeBtn: closeBtn
-  }
-  ;
+    hide: hide
+  };
 })();
