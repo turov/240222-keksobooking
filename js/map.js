@@ -18,7 +18,7 @@
 
   var closeAd = function () {
     window.pin.deactivate();
-    window.showCard.hide();
+    window.card.hide();
   };
 
   var removeCloseListeners = function () {
@@ -55,7 +55,7 @@
     window.pin.activate(currentPin);
     var id = currentPin.dataset.id; // заполняем и выводим попап.
     var currentPopup = window.card.create(rentData[id]);
-    window.showCard.show(currentPopup, pageMap);
+    window.card.show(currentPopup, pageMap);
     window.card.closeBtn = currentPopup.querySelector('.popup__close');// находим кнопку закрытия
     window.card.closeBtn.addEventListener('click', onCloseClick);
     document.addEventListener('keydown', onCloseEsc);
