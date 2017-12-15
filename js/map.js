@@ -5,7 +5,15 @@
   var form = document.querySelector('.notice__form');
   var mapPinMain = pageMap.querySelector('.map__pin--main');
   var PIN_MAIN_SHIFT_Y = 54;
-  var rentData = window.generatedAds;
+  //var rentData = window.generatedAds;
+
+  var onSuccess = function (arrData) {
+    rentData = arrData.slice();
+  };
+  console.log(rentData);
+
+  var rentData = window.backend.load(onSuccess);
+
 
   var fillMap = function () {
     var mapPins = document.querySelector('.map__pins');

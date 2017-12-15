@@ -18,7 +18,7 @@
       }
       featuresList.appendChild(featureItem);
     };
-    element.querySelector('h3').textContent = adsinfo.offer.title;
+    element.querySelector('h3').textContent = adsinfo.offer.address; // adsinfo.offer.title;
     element.querySelector('p small').textContent = adsinfo.offer.address;
     element.querySelector('.popup__price').textContent = adsinfo.offer.price + '₽/ночь';
     element.querySelector('h4').textContent = adsinfo.offer.type;
