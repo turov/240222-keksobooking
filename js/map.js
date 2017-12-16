@@ -5,15 +5,31 @@
   var form = document.querySelector('.notice__form');
   var mapPinMain = pageMap.querySelector('.map__pin--main');
   var PIN_MAIN_SHIFT_Y = 54;
-  //var rentData = window.generatedAds;
+  // var rentData = window.generatedAds;
 
+  var rentData = null;
   var onSuccess = function (arrData) {
     rentData = arrData.slice();
+    for (var i = 0; i <= rentData.length - 1; i++) {
+      rentData[i].id = i;
+    }
+    // console.log(rentData);
   };
-  console.log(rentData);
 
-  var rentData = window.backend.load(onSuccess);
+  var onError = function (errorMessage) {
+    var node = document.createElement('div');
+    node.style = 'z-index: 3; margin: 0 auto; text-align: center; background-color: #ff5635; color: #fff; width: 800px; padding: 25px 0; border: 4px solid #fff;';
+    node.style.position = 'fixed';
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.top = '40px';
+    node.style.fontSize = '30px';
+    node.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', node);
+  };
 
+
+  window.backend.load(onSuccess, onError);
 
   var fillMap = function () {
     var mapPins = document.querySelector('.map__pins');

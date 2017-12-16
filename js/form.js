@@ -132,9 +132,41 @@
   inputPrice.addEventListener('invalid', onPriceInvalid);
   inputTitle.addEventListener('input', onTitileInput);
   inputPrice.addEventListener('input', onPriceInput);
+
   window.form = {
     enableFields: enableFields,
     inputAddress: inputAddress
   };
+
+  var onSuccess = function () {
+    inputTitle.value = '';
+    inputPrice.value = '';
+    inputAddress.value = '';
+    inputType.value = 'flat';
+    inputTimein.value = '12:00';
+    inputTimeout.value = '12:00';
+    inputRooms.value = '1';
+    inputCapacity.value = '1';
+  };
+
+  var onError = function (errorMessage) {
+    var node = document.createElement('div');
+    node.style = 'z-index: 3; margin: 0 auto; text-align: center; background-color: #fff; color: #ff5635; width: 800px; padding: 25px 0; border: 4px solid #ff5635;';
+    node.style.position = 'fixed';
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.top = '40px';
+    node.style.fontSize = '30px';
+    node.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', node);
+  };
+
+  var onSubmitForm = function (e) {
+    window.backend.save(new FormData(form), onSuccess, onError);
+    e.preventDefault();
+  };
+
+  form.addEventListener('submit', onSubmitForm);
+
 })();
 

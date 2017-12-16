@@ -17,7 +17,7 @@
     xhr.addEventListener('timeout', function () {
       onError('Запрос не успел выполниться за ' + xhr.timeout / 1000 + 'с');
     });
-    xhr.timeout = 6000;
+    xhr.timeout = 10000;
     return xhr;
   };
   var load = function (onLoad, onError) {
