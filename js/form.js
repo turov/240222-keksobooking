@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-// валидация формы
+
   var form = document.querySelector('.notice__form');
   var inputAddress = document.querySelector('#address');
   var inputTitle = document.querySelector('#title');
@@ -28,6 +28,7 @@
   inputPrice.min = 0;
   inputPrice.max = 1000000;
   inputPrice.value = 1000;
+
   var disableFields = function () {
     for (var i = 0; i < fields.length; i++) {
       fields[i].disabled = true;
@@ -40,12 +41,15 @@
     }
 
   };
+
   var syncValues = function (element, value) {
     element.value = value;
   };
+
   var syncValueWithMin = function (element, value) {
     element.min = value;
   };
+
   var syncroniseRooms = function (rooms1, capacity1) {
     for (var i = 0; i < capacity1.options.length; i++) {
       capacity1.options[i].disabled = true;
@@ -71,21 +75,7 @@
         break;
     }
   };
-  var onTimeinChange = function () {
-    window.synchronizeFields(inputTimein, inputTimeout, CHECK_TIMES, CHECK_TIMES, syncValues);
-  };
 
-  var onTimeoutChange = function () {
-    window.synchronizeFields(inputTimeout, inputTimein, CHECK_TIMES, CHECK_TIMES, syncValues);
-  };
-
-  var onTypeChange = function () {
-    window.synchronizeFields(inputType, inputPrice, HOUSE_TYPES, MIN_PRICES, syncValueWithMin);
-  };
-  var onRoomsChange = function () {
-    syncroniseRooms(inputRooms, inputCapacity);
-  };
-  disableFields();
   var onTitleInvalid = function () {
     inputTitle.style.border = '1px solid tomato';
     if (inputTitle.validity.tooShort) {
@@ -98,6 +88,7 @@
       inputTitle.setCustomValidity('');
     }
   };
+
   var onPriceInvalid = function () {
     inputPrice.style.border = '1px solid tomato';
     if (inputPrice.validity.rangeUnderflow) {
@@ -119,26 +110,28 @@
     inputPrice.style.border = 'none';
   };
 
-  inputTimein.addEventListener('change', onTimeinChange);
-  inputTimeout.addEventListener('change', onTimeoutChange);
-  inputType.addEventListener('change', onTypeChange);
-  syncroniseRooms(inputRooms, inputCapacity);
-  inputRooms.addEventListener('change', function () {
-    syncroniseRooms(inputRooms, inputCapacity);
-  });
-
-  inputRooms.addEventListener('change', onRoomsChange);
-  inputTitle.addEventListener('invalid', onTitleInvalid);
-  inputPrice.addEventListener('invalid', onPriceInvalid);
-  inputTitle.addEventListener('input', onTitileInput);
-  inputPrice.addEventListener('input', onPriceInput);
-
-  window.form = {
-    enableFields: enableFields,
-    inputAddress: inputAddress
+  var onTimeinChange = function () {
+    window.synchronizeFields(inputTimein, inputTimeout, CHECK_TIMES, CHECK_TIMES, syncValues);
   };
 
-  var onSuccess = function () {
+  var onTimeoutChange = function () {
+    window.synchronizeFields(inputTimeout, inputTimein, CHECK_TIMES, CHECK_TIMES, syncValues);
+  };
+
+  var onTypeChange = function () {
+    window.synchronizeFields(inputType, inputPrice, HOUSE_TYPES, MIN_PRICES, syncValueWithMin);
+  };
+
+  var onRoomsChange = function () {
+    syncroniseRooms(inputRooms, inputCapacity);
+  };
+
+  var onSubmitForm = function (e) {
+    window.backend.save(new FormData(form), onSuccess, window.message.onError);
+    e.preventDefault();
+  };
+
+  var onSuccess = function () { // сброс полей формы при успешной отправке
     inputTitle.value = '';
     inputPrice.value = '';
     inputAddress.value = '';
@@ -149,24 +142,26 @@
     inputCapacity.value = '1';
   };
 
-  var onError = function (errorMessage) {
-    var node = document.createElement('div');
-    node.style = 'z-index: 3; margin: 0 auto; text-align: center; background-color: #fff; color: #ff5635; width: 800px; padding: 25px 0; border: 4px solid #ff5635;';
-    node.style.position = 'fixed';
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.top = '40px';
-    node.style.fontSize = '30px';
-    node.textContent = errorMessage;
-    document.body.insertAdjacentElement('afterbegin', node);
-  };
+  disableFields();
 
-  var onSubmitForm = function (e) {
-    window.backend.save(new FormData(form), onSuccess, onError);
-    e.preventDefault();
-  };
-
+  inputTimein.addEventListener('change', onTimeinChange);
+  inputTimeout.addEventListener('change', onTimeoutChange);
+  inputType.addEventListener('change', onTypeChange);
+  syncroniseRooms(inputRooms, inputCapacity);
+  inputRooms.addEventListener('change', function () {
+    syncroniseRooms(inputRooms, inputCapacity);
+  });
+  inputRooms.addEventListener('change', onRoomsChange);
+  inputTitle.addEventListener('invalid', onTitleInvalid);
+  inputPrice.addEventListener('invalid', onPriceInvalid);
+  inputTitle.addEventListener('input', onTitileInput);
+  inputPrice.addEventListener('input', onPriceInput);
   form.addEventListener('submit', onSubmitForm);
+
+  window.form = {
+    enableFields: enableFields,
+    inputAddress: inputAddress
+  };
 
 })();
 
