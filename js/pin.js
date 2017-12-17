@@ -1,8 +1,8 @@
 'use strict';
 (function () {
 
-  var previousPin = null;
   var SHIFT_Y = 46;
+  var previousPin = null;
 
   var create = function (info) {
     var template = document.querySelector('template');
@@ -25,6 +25,7 @@
   var deactivate = function () {
     previousPin.classList.remove('map__pin--active');
   };
+
   window.pin = {
     create: create,
     activate: activate,
