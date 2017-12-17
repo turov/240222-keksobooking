@@ -1,22 +1,19 @@
 'use strict';
 
 (function () {
+
+  var PIN_MAIN_SHIFT_Y = 54;
   var pageMap = document.querySelector('.map');
   var form = document.querySelector('.notice__form');
   var mapPinMain = pageMap.querySelector('.map__pin--main');
-  var PIN_MAIN_SHIFT_Y = 54;
-  // var rentData = window.generatedAds;
-
   var rentData = null;
+
   var onSuccess = function (arrData) {
     rentData = arrData.slice();
     for (var i = 0; i <= rentData.length - 1; i++) {
       rentData[i].id = i;
     }
-    // console.log(rentData);
   };
-
-  window.backend.load(onSuccess, window.message.onError);
 
   var fillMap = function () {
     var mapPins = document.querySelector('.map__pins');
@@ -105,8 +102,8 @@
       window.form.inputAddress.value = (mapPinMain.offsetTop - shift.y) + ', ' + (mapPinMain.offsetLeft - shift.x);
     };
 
-    var onMouseUp = function (upEvt) {
-      upEvt.preventDefault();
+    var onMouseUp = function (Evt) {
+      Evt.preventDefault();
 
       pageMap.removeEventListener('mousemove', onMouseMove);
       pageMap.removeEventListener('mouseup', onMouseUp);
@@ -116,5 +113,8 @@
     pageMap.addEventListener('mouseup', onMouseUp);
 
   });
+
+  window.backend.load(onSuccess, window.message.onError);
+
 })();
 

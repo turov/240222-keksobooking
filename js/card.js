@@ -3,6 +3,7 @@
 (function () {
   var previousPopup = null;
   var closeBtn = null;
+
   var create = function (adsinfo) {
     var template = document.querySelector('template');
     var mapCard = template.content.querySelector('.map__card');
@@ -30,6 +31,7 @@
     element.querySelector('img').setAttribute('src', adsinfo.author.avatar);
     return element;
   };
+
   var show = function (popup, container) {
     if (previousPopup) {
       container.removeChild(previousPopup);

@@ -2,6 +2,9 @@
 
 (function () {
 
+  var CHECK_TIMES = ['12:00', '13:00', '14:00'];
+  var HOUSE_TYPES = ['bungalo', 'flat', 'house', 'palace'];
+  var MIN_PRICES = [0, 1000, 5000, 10000];
   var form = document.querySelector('.notice__form');
   var inputAddress = document.querySelector('#address');
   var inputTitle = document.querySelector('#title');
@@ -12,22 +15,6 @@
   var inputRooms = document.querySelector('#room_number');
   var inputCapacity = document.querySelector('#capacity');
   var fields = form.querySelectorAll('fieldset');
-  var CHECK_TIMES = ['12:00', '13:00', '14:00'];
-  var HOUSE_TYPES = ['bungalo', 'flat', 'house', 'palace'];
-  var MIN_PRICES = [0, 1000, 5000, 10000];
-
-  form.setAttribute('action', 'https://js.dump.academy/keksobooking');
-  form.setAttribute('type', 'multipart/form-data');
-  inputAddress.required = true;
-  inputAddress.value = null;
-  inputAddress.setAttribute('readonly', 'readonly');
-  inputTitle.required = true;
-  inputTitle.setAttribute('minlength', '30');
-  inputTitle.setAttribute('maxlength', '100');
-  inputPrice.required = true;
-  inputPrice.min = 0;
-  inputPrice.max = 1000000;
-  inputPrice.value = 1000;
 
   var disableFields = function () {
     for (var i = 0; i < fields.length; i++) {
@@ -39,7 +26,6 @@
     for (var t = 0; t < fields.length; t++) {
       fields[t].disabled = false;
     }
-
   };
 
   var syncValues = function (element, value) {
@@ -142,6 +128,18 @@
     inputCapacity.value = '1';
   };
 
+  form.setAttribute('action', 'https://js.dump.academy/keksobooking');
+  form.setAttribute('type', 'multipart/form-data');
+  inputAddress.required = true;
+  inputAddress.value = null;
+  inputAddress.setAttribute('readonly', 'readonly');
+  inputTitle.required = true;
+  inputTitle.setAttribute('minlength', '30');
+  inputTitle.setAttribute('maxlength', '100');
+  inputPrice.required = true;
+  inputPrice.min = 0;
+  inputPrice.max = 1000000;
+  inputPrice.value = 1000;
   disableFields();
 
   inputTimein.addEventListener('change', onTimeinChange);
