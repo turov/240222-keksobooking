@@ -2,7 +2,7 @@
 
 (function () {
 
-  var PIN_MAIN_SHIFT_Y = 54;
+  var PIN_MAIN_SHIFT_Y = 53;
   var pageMap = document.querySelector('.map');
   var form = document.querySelector('.notice__form');
   var mapPinMain = pageMap.querySelector('.map__pin--main');
@@ -18,7 +18,7 @@
   var fillMap = function () {
     var mapPins = document.querySelector('.map__pins');
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < rentData.length; i++) {
+    for (var i = 0; i < 4; i++) { // i < rentData.length
       fragment.appendChild(window.pin.create(rentData[i]));
     }
     mapPins.appendChild(fragment);
@@ -44,6 +44,10 @@
       pins[j].addEventListener('click', onPinClick);
     }
     mapPinMain.removeEventListener('mouseup', onMainPinMouseup);
+    window.map = {
+      rentData: rentData,
+      pins: pins
+    };
   };
 
   var onCloseEsc = function (evt) { // Функция навешивается на document и закрывает попап при нажатии на escape
