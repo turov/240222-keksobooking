@@ -6,10 +6,10 @@
   var MAX_NUMBER_OF_PINS = 5;
 
   var filters = document.querySelector('.map__filters');
-  var filterType = filters.querySelector('.housing__type');
-  var filterPrice = filters.querySelector('.housing__price');
-  var filterRooms = filters.querySelector('.housing__rooms');
-  var filterGuests = filters.querySelector('.housing__guests');
+  var filterType = filters.querySelector('#housing-type');
+  var filterPrice = filters.querySelector('#housing-price');
+  var filterRooms = filters.querySelector('#housing-rooms');
+  var filterGuests = filters.querySelector('#housing-guests');
   var filterFeaturesCollection = filters.querySelectorAll('.features input[type="checkbox"]');
   var filterFeaturesArray = Array.prototype.slice.call(filterFeaturesCollection, 0);
   var filteredPins;

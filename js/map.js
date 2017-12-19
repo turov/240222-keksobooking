@@ -15,11 +15,28 @@
     }
   };
 
+  /*
   var fillMap = function () {
     var mapPins = document.querySelector('.map__pins');
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < rentData.length; i++) {
       fragment.appendChild(window.pin.create(rentData[i]));
+    }
+    mapPins.appendChild(fragment);
+  };
+  */
+
+  var fillMap = function () {
+    var mapPins = document.querySelector('.map__pins');
+    var fragment = document.createDocumentFragment();
+    for (var i = 0; i < rentData.length; i++) {
+      if (i < 5) {
+        fragment.appendChild(window.pin.create(rentData[i]));
+      } else {
+        var element = window.pin.create(rentData[i]);
+        element.classList.add('hidden');
+        fragment.appendChild(element);
+      }
     }
     mapPins.appendChild(fragment);
   };
