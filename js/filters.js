@@ -3,6 +3,7 @@
 (function () {
   var FILTER_MIN_PRICE = 10000;
   var FILTER_MAX_PRICE = 50000;
+  var MAX_NUMBER_OF_PINS = 5;
 
   var filters = document.querySelector('.map__filters');
   var filterType = filters.querySelector('.housing__type');
@@ -19,15 +20,16 @@
     });
   };
 
-  var showFilteredPins = function (pins) {
-    pins.forEach(function (pin) {
-      pin.classList.remove('hidden');
-    });
+  var showFilteredPins = function () {
+    var iterationCount = Math.min(MAX_NUMBER_OF_PINS, filteredPins.length);
+    for (var i = 0; i < iterationCount; i++) {
+      filteredPins[i].classList.remove('hidden');
+    }
   };
 
   var filterByProperty = function (filterSelect, property) {
     return function (item) {
-      var id = item.id;
+      var id = item.dataset.id; //
 
       if (filterSelect.value === 'any' || filterSelect.value === (window.map.rentData[id].offer[property] + '')) {
         return true;
@@ -39,7 +41,7 @@
 
   var filterByPrice = function (filterSelect) {
     return function (item) {
-      var id = item.id;
+      var id = item.dataset.id;
       var adPrice = window.map.rentData[id].offer.price + '';
 
       switch (filterSelect.value) {
@@ -58,7 +60,7 @@
   };
 
   var filterByFeatures = function (item) {
-    var id = item.id;
+    var id = item.dataset.id;
     var features = [];
 
     filterFeaturesArray.forEach(function (_item, i) {
@@ -73,10 +75,9 @@
   };
 
   var updateFilteredPins = function () {
-    filteredPins = window.map.pins;
+    filteredPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    filteredPins = Array.from(filteredPins);
 
-    console.log(filteredPins); //
-    console.log(Array.from(filteredPins)); //
     // При изменении формы с фильтрами изначально скрываем все пины
     hideAllPins(filteredPins);
 
