@@ -18,7 +18,7 @@
   var fillMap = function () {
     var mapPins = document.querySelector('.map__pins');
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < 4; i++) { // i < rentData.length
+    for (var i = 0; i < i < rentData.length; i++) {
       fragment.appendChild(window.pin.create(rentData[i]));
     }
     mapPins.appendChild(fragment);

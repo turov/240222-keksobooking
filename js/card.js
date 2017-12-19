@@ -41,7 +41,9 @@
   };
 
   var hide = function () {
-    previousPopup.classList.add('hidden');
+    if (previousPopup) {
+      previousPopup.classList.add('hidden');
+    }
   };
 
   window.card = {

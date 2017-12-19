@@ -75,6 +75,8 @@
   var updateFilteredPins = function () {
     filteredPins = window.map.pins;
 
+    console.log(filteredPins); //
+    console.log(Array.from(filteredPins)); //
     // При изменении формы с фильтрами изначально скрываем все пины
     hideAllPins(filteredPins);
 
