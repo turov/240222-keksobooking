@@ -5,6 +5,7 @@
   var CHECK_TIMES = ['12:00', '13:00', '14:00'];
   var HOUSE_TYPES = ['bungalo', 'flat', 'house', 'palace'];
   var MIN_PRICES = [0, 1000, 5000, 10000];
+
   var form = document.querySelector('.notice__form');
   var inputAddress = document.querySelector('#address');
   var inputTitle = document.querySelector('#title');

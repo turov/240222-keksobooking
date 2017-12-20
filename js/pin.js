@@ -1,7 +1,8 @@
 'use strict';
 (function () {
 
-  var SHIFT_Y = 46;
+  var SHIFT_Y = 41;
+
   var previousPin = null;
 
   var create = function (info) {

@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+
   var setup = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
@@ -20,16 +21,19 @@
     xhr.timeout = 10000;
     return xhr;
   };
+
   var load = function (onLoad, onError) {
     var xhr = setup(onLoad, onError);
     xhr.open('GET', 'https://1510.dump.academy/keksobooking/data');
     xhr.send();
   };
+
   var save = function (data, onLoad, onError) {
     var xhr = setup(onLoad, onError);
     xhr.open('POST', 'https://1510.dump.academy/keksobooking');
     xhr.send(data);
   };
+
   window.backend = {
     load: load,
     save: save

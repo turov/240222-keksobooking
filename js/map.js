@@ -2,24 +2,31 @@
 
 (function () {
 
-  var PIN_MAIN_SHIFT_Y = 54;
+  var PIN_MAIN_SHIFT_Y = 53;
+
   var pageMap = document.querySelector('.map');
   var form = document.querySelector('.notice__form');
   var mapPinMain = pageMap.querySelector('.map__pin--main');
-  var rentData = null;
+  var rentInformations = null;
 
   var onSuccess = function (arrData) {
-    rentData = arrData.slice();
-    for (var i = 0; i <= rentData.length - 1; i++) {
-      rentData[i].id = i;
+    rentInformations = arrData.slice();
+    for (var i = 0; i <= rentInformations.length - 1; i++) {
+      rentInformations[i].id = i;
     }
   };
 
   var fillMap = function () {
     var mapPins = document.querySelector('.map__pins');
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < rentData.length; i++) {
-      fragment.appendChild(window.pin.create(rentData[i]));
+    for (var i = 0; i < rentInformations.length; i++) {
+      if (i < 5) {
+        fragment.appendChild(window.pin.create(rentInformations[i]));
+      } else {
+        var element = window.pin.create(rentInformations[i]);
+        element.classList.add('hidden');
+        fragment.appendChild(element);
+      }
     }
     mapPins.appendChild(fragment);
   };
@@ -44,6 +51,10 @@
       pins[j].addEventListener('click', onPinClick);
     }
     mapPinMain.removeEventListener('mouseup', onMainPinMouseup);
+    window.map = {
+      rentInformations: rentInformations,
+      pins: pins
+    };
   };
 
   var onCloseEsc = function (evt) { // Функция навешивается на document и закрывает попап при нажатии на escape
@@ -62,7 +73,7 @@
     var currentPin = event.currentTarget; // пин, по которому кликнули
     window.pin.activate(currentPin);
     var id = currentPin.dataset.id; // заполняем и выводим попап.
-    var currentPopup = window.card.create(rentData[id]);
+    var currentPopup = window.card.create(rentInformations[id]);
     window.card.show(currentPopup, pageMap);
     window.card.closeBtn = currentPopup.querySelector('.popup__close');// находим кнопку закрытия
     window.card.closeBtn.addEventListener('click', onCloseClick);
