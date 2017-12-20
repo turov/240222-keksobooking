@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+
   var KEY_ESCAPE = 27;
   /* Нахождение случайного числа в диапозоне от min до max  */
   var getRandomInteger = function (min, max) {
@@ -19,6 +20,7 @@
     copiedArray.sort(compareRandom);
     return copiedArray.splice(0, lengthOfArray);
   };
+
   window.utils = {
     getRandomInteger: getRandomInteger,
     compareRandom: compareRandom,

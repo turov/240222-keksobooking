@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+
   var FILTER_MIN_PRICE = 10000;
   var FILTER_MAX_PRICE = 50000;
   var MAX_NUMBER_OF_PINS = 5;
@@ -29,9 +30,9 @@
 
   var filterByProperty = function (filterSelect, property) {
     return function (item) {
-      var id = item.dataset.id; //
+      var id = item.dataset.id;
 
-      if (filterSelect.value === 'any' || filterSelect.value === (window.map.rentData[id].offer[property] + '')) {
+      if (filterSelect.value === 'any' || filterSelect.value === (window.map.rentInformations[id].offer[property] + '')) {
         return true;
       } else {
         return false;
@@ -42,7 +43,7 @@
   var filterByPrice = function (filterSelect) {
     return function (item) {
       var id = item.dataset.id;
-      var adPrice = window.map.rentData[id].offer.price + '';
+      var adPrice = window.map.rentInformations[id].offer.price + '';
 
       switch (filterSelect.value) {
         case 'any':
@@ -70,7 +71,7 @@
     });
 
     return features.every(function (feature) {
-      return window.map.rentData[id].offer.features.indexOf(feature) !== -1;
+      return window.map.rentInformations[id].offer.features.indexOf(feature) !== -1;
     });
   };
 
