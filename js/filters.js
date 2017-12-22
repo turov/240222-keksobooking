@@ -7,6 +7,7 @@
   var MAX_NUMBER_OF_PINS = 5;
 
   var filters = document.querySelector('.map__filters');
+  var map = document.querySelector('.map');
   var filterType = filters.querySelector('#housing-type');
   var filterPrice = filters.querySelector('#housing-price');
   var filterRooms = filters.querySelector('#housing-rooms');
@@ -70,8 +71,16 @@
     });
   };
 
+  var filterPins = function (item) {
+    return filterByProperty(filterType, 'type')(item) &&
+      filterByPrice(filterPrice)(item) &&
+      filterByProperty(filterRooms, 'rooms')(item) &&
+      filterByProperty(filterGuests, 'guests')(item) &&
+      filterByFeatures(item);
+  };
+
   var updateFilteredPins = function () {
-    filteredPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    filteredPins = map.querySelectorAll('.map__pin:not(.map__pin--main)');
     filteredPins = Array.from(filteredPins);
 
     // При изменении формы с фильтрами изначально скрываем все пины
@@ -79,13 +88,13 @@
 
     // И скрываем блок с объявлением
     window.card.hide();
+    // деактивируем активный пин
+    window.pin.deactivate();
 
     // Фильтруем массив с пинами, пин объявления, которое не подходит, не попадает в filteredPins
-    filteredPins = filteredPins.filter(filterByProperty(filterType, 'type'));
-    filteredPins = filteredPins.filter(filterByPrice(filterPrice));
-    filteredPins = filteredPins.filter(filterByProperty(filterRooms, 'rooms'));
-    filteredPins = filteredPins.filter(filterByProperty(filterGuests, 'guests'));
-    filteredPins = filteredPins.filter(filterByFeatures);
+
+    filteredPins = filteredPins.filter(filterPins);
+
 
     // После всех фильтраций показываем пины, которые соответствуют фильтрам
     showFilteredPins(filteredPins);

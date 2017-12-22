@@ -9,7 +9,7 @@
   var pageMap = document.querySelector('.map');
   var form = document.querySelector('.notice__form');
   var mapPinMain = pageMap.querySelector('.map__pin--main');
-  var rentInformations = null;
+  var rentInformations = [];
 
   var onSuccess = function (arrData) {
     rentInformations = arrData.slice();
