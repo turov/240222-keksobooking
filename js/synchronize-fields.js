@@ -2,7 +2,8 @@
 (function () {
 
   window.synchronizeFields = function (firstField, secondField, firstArray, secondArray, syncValues) {
-    var index = firstArray.indexOf(firstField.value);
+    var value = firstField.value;
+    var index = firstArray.indexOf(value);
     syncValues(secondField, secondArray[index]);
   };
 })();

@@ -8,16 +8,18 @@
   var MIN_PRICES = [0, 1000, 5000, 10000];
 
   var form = document.querySelector('.notice__form');
-  var inputAddress = document.querySelector('#address');
-  var inputTitle = document.querySelector('#title');
-  var inputPrice = document.querySelector('#price');
-  var inputType = document.querySelector('#type');
-  var inputTimein = document.querySelector('#timein');
-  var inputTimeout = document.querySelector('#timeout');
-  var inputRooms = document.querySelector('#room_number');
-  var inputCapacity = document.querySelector('#capacity');
+  var inputAddress = form.querySelector('#address');
+  var inputTitle = form.querySelector('#title');
+  var inputPrice = form.querySelector('#price');
+  var inputType = form.querySelector('#type');
+  var inputTimein = form.querySelector('#timein');
+  var inputTimeout = form.querySelector('#timeout');
+  var inputRooms = form.querySelector('#room_number');
+  var inputCapacity = form.querySelector('#capacity');
   var fields = form.querySelectorAll('fieldset');
   var mapPinMain = document.querySelector('.map__pin--main');
+  var avatar = form.querySelector('.notice__preview img');
+  var photos = form.querySelector('.form__photo-container');
 
   var disableFields = function () {
     for (var i = 0; i < fields.length; i++) {
@@ -51,6 +53,7 @@
       case '2':
         capacity1.options[1].disabled = false;
         capacity1.options[2].disabled = false;
+        capacity1.value = 2;
         break;
       case '3':
         capacity1.options[0].disabled = false;
@@ -127,10 +130,17 @@
   };
 
   var onSuccess = function () { // сброс полей формы при успешной отправке
+    var childs = photos.querySelectorAll('img');
+    /*
+    [].forEach.call(childs, function (element) {
+      photos.removeChild(element);
+    });
+    */
     form.reset();
     inputPrice.value = '1000';
     inputAddress.value = getMainPinAddress();
     inputCapacity.value = '1';
+    avatar.src = 'img/muffin.png';
     window.card.hide();
     window.pin.deactivate();
   };

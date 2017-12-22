@@ -12,7 +12,7 @@
   var filterRooms = filters.querySelector('#housing-rooms');
   var filterGuests = filters.querySelector('#housing-guests');
   var filterFeaturesCollection = filters.querySelectorAll('.features input[type="checkbox"]');
-  var filterFeaturesArray = Array.prototype.slice.call(filterFeaturesCollection, 0);
+  var filterFeatures = Array.prototype.slice.call(filterFeaturesCollection, 0);
   var filteredPins;
 
   var hideAllPins = function (pins) {
@@ -31,12 +31,7 @@
   var filterByProperty = function (filterSelect, property) {
     return function (item) {
       var id = item.dataset.id;
-
-      if (filterSelect.value === 'any' || filterSelect.value === (window.rentInformations[id].offer[property] + '')) {
-        return true;
-      } else {
-        return false;
-      }
+      return filterSelect.value === 'any' || filterSelect.value === (window.rentInformations[id].offer[property] + '');
     };
   };
 
@@ -64,11 +59,19 @@
     var id = item.dataset.id;
     var features = [];
 
-    filterFeaturesArray.forEach(function (_item, i) {
-      if (filterFeaturesArray[i].checked) {
-        features.push(filterFeaturesArray[i].value);
+    filterFeatures.forEach(function (_item, i) {
+      if (_item.checked) {
+        features.push(_item.value);
       }
     });
+
+    /*
+        filterFeatures.forEach(function (_item, i) {
+      if (filterFeatures[i].checked) {
+        features.push(filterFeatures[i].value);
+      }
+    });
+     */
 
     return features.every(function (feature) {
       return window.rentInformations[id].offer.features.indexOf(feature) !== -1;

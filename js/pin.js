@@ -4,10 +4,10 @@
   var SHIFT_Y = 41;
 
   var previousPin = null;
+  var template = document.querySelector('template');
+  var mapPin = template.content.querySelector('.map__pin');
 
   var create = function (info) {
-    var template = document.querySelector('template');
-    var mapPin = template.content.querySelector('.map__pin');
     var mapElement = mapPin.cloneNode(true);
     mapElement.style.top = (info.location.y - SHIFT_Y) + 'px';
     mapElement.style.left = info.location.x + 'px';
@@ -24,7 +24,9 @@
   };
 
   var deactivate = function () {
-    previousPin.classList.remove('map__pin--active');
+    if (previousPin) {
+      previousPin.classList.remove('map__pin--active');
+    }
   };
 
   window.pin = {

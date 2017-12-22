@@ -13,6 +13,11 @@
   var avatarUser = formNotice.querySelector('.notice__preview img');
   var photoZone = dropZoneImages[1];
   var uploadPhoto = formNotice.querySelector('.form__photo-container');
+  var inputAvatar = formNotice.querySelector('#avatar');
+  var inputImages = formNotice.querySelector('#images');
+
+  inputAvatar.name = 'avatar';
+  inputImages.name = 'images';
 
   // Добавление фотографий на форму
   var upLoadImage = function (evt, getFile, showMiniFile) {
@@ -54,6 +59,7 @@
     img.style = 'margin: 10px';
     uploadPhoto.appendChild(img);
     img.src = content;
+    window.photos = img;
   };
   // Добавляем файлы через окно выбора файлов
   var onChooserAvatarChange = function (evt) {
