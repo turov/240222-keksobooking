@@ -59,19 +59,11 @@
     var id = item.dataset.id;
     var features = [];
 
-    filterFeatures.forEach(function (_item, i) {
+    filterFeatures.forEach(function (_item) {
       if (_item.checked) {
         features.push(_item.value);
       }
     });
-
-    /*
-        filterFeatures.forEach(function (_item, i) {
-      if (filterFeatures[i].checked) {
-        features.push(filterFeatures[i].value);
-      }
-    });
-     */
 
     return features.every(function (feature) {
       return window.rentInformations[id].offer.features.indexOf(feature) !== -1;

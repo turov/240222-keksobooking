@@ -8,25 +8,28 @@
   var getFeaturesList = function (element, features) {
     var featuresList = element.querySelector('.popup__features');
     var featureItem = document.createDocumentFragment();
-    for (var j = 0; j <= features.length - 1; j++) {
+
+    features.forEach(function (item, i) {
       var newElement = document.createElement('li');
-      newElement.className = 'feature feature--' + features[j];
+      newElement.className = 'feature feature--' + features[i];
       featureItem.appendChild(newElement);
-    }
+    });
+
     featuresList.appendChild(featureItem);
   };
 
   var renderPhotos = function (photos, popupPhotos) {
     var fragment = document.createDocumentFragment();
     popupPhotos.innerHTML = '';
-    for (var i = 0; i < photos.length; i++) {
+    photos.forEach(function (item, i) {
       var listElement = document.createElement('li');
       var imageElement = document.createElement('img');
       imageElement.style = 'width: 42px; height: 42px; margin: 5px';
       imageElement.setAttribute('src', photos[i]);
       listElement.appendChild(imageElement);
       fragment.appendChild(listElement);
-    }
+    });
+
     popupPhotos.appendChild(fragment);
   };
 

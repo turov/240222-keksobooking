@@ -2,7 +2,7 @@
 
 (function () {
 
-  var TIME_OUT = 3000; // 3 секунды
+  var TIME_OUT = 5000; // 5 секунд
 
   var onError = function (errorMessage) {
     var node = document.createElement('div');

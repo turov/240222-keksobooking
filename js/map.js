@@ -13,15 +13,15 @@
 
   var onSuccess = function (arrData) {
     rentInformations = arrData.slice();
-    for (var i = 0; i <= rentInformations.length - 1; i++) {
+    rentInformations.forEach(function (item, i) {
       rentInformations[i].id = i;
-    }
+    });
   };
 
   var fillMap = function () {
     var mapPins = document.querySelector('.map__pins');
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < rentInformations.length; i++) {
+    rentInformations.forEach(function (item, i) {
       if (i < 5) {
         fragment.appendChild(window.pin.create(rentInformations[i]));
       } else {
@@ -29,7 +29,7 @@
         element.classList.add('hidden');
         fragment.appendChild(element);
       }
-    }
+    });
     mapPins.appendChild(fragment);
   };
 

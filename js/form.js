@@ -22,15 +22,15 @@
   var photos = form.querySelector('.form__photo-container');
 
   var disableFields = function () {
-    for (var i = 0; i < fields.length; i++) {
+    fields.forEach(function (item, i) {
       fields[i].disabled = true;
-    }
+    });
   };
 
   var enableFields = function () {
-    for (var t = 0; t < fields.length; t++) {
-      fields[t].disabled = false;
-    }
+    fields.forEach(function (item, i) {
+      fields[i].disabled = false;
+    });
   };
 
   var syncValues = function (element, value) {
@@ -42,9 +42,16 @@
   };
 
   var syncroniseRooms = function (rooms1, capacity1) {
+    /*
     for (var i = 0; i < capacity1.options.length; i++) {
       capacity1.options[i].disabled = true;
     }
+
+    */
+    var capacityOptions = Array.from(capacity1.options);
+    capacityOptions.forEach(function (item, i) {
+      capacityOptions[i].disabled = true;
+    });
     switch (rooms1.value) {
       case '1':
         capacity1.options[2].disabled = false;
@@ -131,11 +138,9 @@
 
   var onSuccess = function () { // сброс полей формы при успешной отправке
     var childs = photos.querySelectorAll('img');
-    /*
     [].forEach.call(childs, function (element) {
       photos.removeChild(element);
     });
-    */
     form.reset();
     inputPrice.value = '1000';
     inputAddress.value = getMainPinAddress();
@@ -179,15 +184,3 @@
   };
 
 })();
-
-/*
-  var onSubmitForm = function (e) {
-    window.backend.save(new FormData(form), function () {
-      form.reset();
-      inputAddress.value = getMainPinAddress();
-      window.card.hide();
-      inputPrice.value = '1000';
-    }, window.message.onError);
-    e.preventDefault();
-  };
- */
